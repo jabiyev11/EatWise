@@ -61,6 +61,9 @@ public class Profile {
         updatedAt = LocalDateTime.now();
     }
 
+    @Column(nullable = false)
+    private Boolean isComplete = false;
+
     @PreUpdate
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();

@@ -24,6 +24,7 @@ public class ProfileResponse {
     private ActivityLevel activityLevel;
     private Goal goal;
     private DietaryPreference dietaryPreference;
+    private Boolean isComplete;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
