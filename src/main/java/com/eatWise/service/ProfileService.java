@@ -26,11 +26,11 @@ public class ProfileService {
     @Transactional
     public ProfileResponse createProfile(Long userId, @Valid ProfileRequest request) {
 
-        User user = userRepository.findById(userId).orElseThrow(() -> new ProfileException("User not found"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new ProfileException("User not found with ID: " + userId));
 
-        if(profileRepository.existsByUserId(userId)) {
-            log.info("Profile already exists with id: {}", userId);
-            throw new ProfileException.ProfileAlreadyExistsException("Profile already exists");
+        if (profileRepository.existsByUserId(userId)) {
+            throw new ProfileException.ProfileAlreadyExistsException(
+                    "Profile already exists for user ID: " + userId);
         }
 
         Profile profile = profileMapper.toEntity(request);
@@ -42,10 +42,13 @@ public class ProfileService {
         return profileMapper.toResponse(savedProfile);
     }
 
+    @Transactional(readOnly = true)
     public ProfileResponse getProfileByUserId(Long userId) {
-        log.info("Get profile by user Id: {}", userId);
+        log.info("Fetching profile for user ID: {}", userId);
 
-        Profile profile = profileRepository.findByUserId(userId).orElseThrow(() -> new ProfileException("User not found"));
+        Profile profile = profileRepository.findByUserId(userId)
+                .orElseThrow(() -> new ProfileException.ProfileNotFoundException(
+                        "Profile not found for user ID: " + userId));
 
         return profileMapper.toResponse(profile);
     }
@@ -61,6 +64,7 @@ public class ProfileService {
         return profileMapper.toResponse(updatedProfile);
     }
 
+    @Transactional
     public void deleteProfile(Long userId) {
         if(!profileRepository.existsByUserId(userId)) {
             log.info("Profile not found for user Id: {}", userId);
@@ -84,5 +88,6 @@ public class ProfileService {
                 .orElseThrow(() -> new ProfileException.ProfileNotFoundException(
                         "Profile not found for user ID: " + userId));
     }
+
 
 }
