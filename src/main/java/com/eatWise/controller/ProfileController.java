@@ -1,5 +1,6 @@
 package com.eatWise.controller;
 
+import com.eatWise.config.CustomUserDetailsService;
 import com.eatWise.domain.User;
 import com.eatWise.dto.request.ProfileRequest;
 import com.eatWise.dto.response.ProfileResponse;
@@ -11,9 +12,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/profile")
@@ -24,14 +30,9 @@ public class ProfileController {
     private final ProfileService profileService;
     private final UserRepository userRepository;
 
-
     @PostMapping
-    public ResponseEntity<RestResponse<ProfileResponse>> createProfile(
-            @Valid @RequestBody ProfileRequest request,
-            Authentication authentication) {
-
-        String email = authentication.getName();
-        System.out.println(email);
+    public ResponseEntity<RestResponse<ProfileResponse>> createProfile(@Valid @RequestBody ProfileRequest request) {
+        String email = CustomUserDetailsService.getAuthentication().getName();
         User user = userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
         Long userId = user.getId();
@@ -42,11 +43,8 @@ public class ProfileController {
     }
 
     @GetMapping
-    public ResponseEntity<RestResponse<ProfileResponse>> getProfile(
-            Authentication authentication) {
-
-        String email = authentication.getName();
-
+    public ResponseEntity<RestResponse<ProfileResponse>> getProfile() {
+        String email = CustomUserDetailsService.getAuthentication().getName();
         User user = userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
         Long userId = user.getId();
@@ -57,12 +55,8 @@ public class ProfileController {
     }
 
     @PutMapping
-    public ResponseEntity<RestResponse<ProfileResponse>> updateProfile(
-            @Valid @RequestBody ProfileRequest request,
-            Authentication authentication) {
-
-        String email = authentication.getName();
-
+    public ResponseEntity<RestResponse<ProfileResponse>> updateProfile(@Valid @RequestBody ProfileRequest request) {
+        String email = CustomUserDetailsService.getAuthentication().getName();
         User user = userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
         Long userId = user.getId();
@@ -74,11 +68,8 @@ public class ProfileController {
     }
 
     @DeleteMapping
-    public ResponseEntity<RestResponse<Void>> deleteProfile(
-            Authentication authentication) {
-
-        String email = authentication.getName();
-
+    public ResponseEntity<RestResponse<Void>> deleteProfile() {
+        String email = CustomUserDetailsService.getAuthentication().getName();
         User user = userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
         Long userId = user.getId();
@@ -90,11 +81,8 @@ public class ProfileController {
     }
 
     @GetMapping("/status")
-    public ResponseEntity<RestResponse<Boolean>> checkProfileStatus(
-            Authentication authentication) {
-
-        String email = authentication.getName();
-
+    public ResponseEntity<RestResponse<Boolean>> checkProfileStatus() {
+        String email = CustomUserDetailsService.getAuthentication().getName();
         User user = userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
         Long userId = user.getId();
@@ -104,6 +92,4 @@ public class ProfileController {
         boolean hasProfile = profileService.hasCompleteProfile(userId);
         return ResponseEntity.ok(RestResponse.success(hasProfile));
     }
-
-
 }
