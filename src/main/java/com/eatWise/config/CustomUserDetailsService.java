@@ -3,6 +3,8 @@ package com.eatWise.config;
 import com.eatWise.domain.User;
 import com.eatWise.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -31,4 +33,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                 .build();
     }
 
+    public static Authentication getAuthentication() {
+        return SecurityContextHolder.getContext().getAuthentication();
+    }
 }
