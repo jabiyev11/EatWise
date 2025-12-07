@@ -92,5 +92,6 @@ public class Profile {
         NONE,
         VEGETARIAN,
         VEGAN,
+        OMNIVORE
     }
 }
