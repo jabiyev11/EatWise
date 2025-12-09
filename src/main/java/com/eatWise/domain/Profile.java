@@ -94,4 +94,5 @@ public class Profile {
         VEGAN,
         OMNIVORE
     }
+
 }

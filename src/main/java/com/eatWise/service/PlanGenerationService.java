@@ -5,10 +5,12 @@ import static com.eatWise.config.CustomUserDetailsService.getAuthentication;
 import com.eatWise.client.RagClient;
 import com.eatWise.client.model.request.RagRequest;
 import com.eatWise.client.model.response.RagResponse;
+import com.eatWise.domain.Plan;
 import com.eatWise.domain.Profile;
 import com.eatWise.domain.User;
 import com.eatWise.dto.request.DaysRequest;
 import com.eatWise.mapper.GeneratedPlanMapper;
+import com.eatWise.repository.PlanRepository;
 import com.eatWise.repository.ProfileRepository;
 import com.eatWise.repository.UserRepository;
 import java.util.Optional;
@@ -23,6 +25,7 @@ public class PlanGenerationService {
     private final GeneratedPlanMapper generatedPlanMapper;
     private final ProfileRepository profileRepository;
     private final UserRepository userRepository;
+    private final PlanRepository planRepository;
 
     public RagResponse generatePlan(DaysRequest daysRequest) {
 
@@ -31,6 +34,15 @@ public class PlanGenerationService {
         Optional<Profile> profile = profileRepository.findByUserId(user.get().getId());
 
         RagRequest ragRequest = generatedPlanMapper.toRagRequest(profile.get(), daysRequest);
-        return ragClient.generatePlan(ragRequest);
+        RagResponse ragResponse = ragClient.generatePlan(ragRequest);
+
+        Plan plan = generatedPlanMapper.toPlan(ragResponse);
+//        user.get().getPlans().add(plan);
+
+        plan.setUser(user.get());
+        planRepository.save(plan);
+
+        return ragResponse;
     }
+
 }
