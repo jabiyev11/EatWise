@@ -37,9 +37,16 @@ cd EatWise
 
 ### 2. Database Setup
 
+**Crucial Step:** You must create a specific database for this application.
+
 1.  Open your PostgreSQL tool (PgAdmin or Command Line).
-2.  By default, the application connects to the default database named `postgres` on port `5432`.
-3.  Ensure your PostgreSQL service is running.
+2.  Run the following SQL command to create the required database:
+
+```sql
+CREATE DATABASE eatwise;
+```
+
+3.  Ensure your PostgreSQL service is running on port `5432`.
 
 ### 3. Environment Configuration (Important!)
 
@@ -105,6 +112,21 @@ $env:JWT_SECRET="your_generated_secret_key"
 
 .\gradlew bootRun
 ```
+
+---
+
+## 🛑 Troubleshooting
+
+### Error: `zsh: permission denied: ./gradlew`
+If you are on Mac or Linux and receive a permission denied error when trying to run the app, it means the Gradle wrapper script is not executable.
+
+**Solution:** Run the following command in your project folder:
+
+```bash
+chmod +x gradlew
+```
+
+Then try running `./gradlew bootRun` again.
 
 ---
 
