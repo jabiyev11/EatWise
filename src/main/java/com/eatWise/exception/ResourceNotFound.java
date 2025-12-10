@@ -1,8 +1,7 @@
 package com.eatWise.exception;
 
-import lombok.RequiredArgsConstructor;
+import lombok.experimental.StandardException;
 
-@RequiredArgsConstructor
+@StandardException
 public class ResourceNotFound extends RuntimeException{
-    private final String message;
 }

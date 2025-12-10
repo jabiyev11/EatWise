@@ -1,6 +1,5 @@
 package com.eatWise.controller;
 
-import com.eatWise.config.CustomUserDetailsService;
 import com.eatWise.domain.User;
 import com.eatWise.dto.request.ProfileRequest;
 import com.eatWise.dto.response.ProfileResponse;
@@ -21,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import static com.eatWise.config.CustomUserDetailsService.getAuthentication;
+
 @RestController
 @RequestMapping("/api/profile")
 @RequiredArgsConstructor
@@ -32,7 +33,7 @@ public class ProfileController {
 
     @PostMapping
     public ResponseEntity<RestResponse<ProfileResponse>> createProfile(@Valid @RequestBody ProfileRequest request) {
-        String email = CustomUserDetailsService.getAuthentication().getName();
+        String email = getAuthentication().getName();
         User user = userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
         Long userId = user.getId();
@@ -44,7 +45,7 @@ public class ProfileController {
 
     @GetMapping
     public ResponseEntity<RestResponse<ProfileResponse>> getProfile() {
-        String email = CustomUserDetailsService.getAuthentication().getName();
+        String email = getAuthentication().getName();
         User user = userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
         Long userId = user.getId();
@@ -56,7 +57,7 @@ public class ProfileController {
 
     @PutMapping
     public ResponseEntity<RestResponse<ProfileResponse>> updateProfile(@Valid @RequestBody ProfileRequest request) {
-        String email = CustomUserDetailsService.getAuthentication().getName();
+        String email = getAuthentication().getName();
         User user = userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
         Long userId = user.getId();
@@ -69,7 +70,7 @@ public class ProfileController {
 
     @DeleteMapping
     public ResponseEntity<RestResponse<Void>> deleteProfile() {
-        String email = CustomUserDetailsService.getAuthentication().getName();
+        String email = getAuthentication().getName();
         User user = userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
         Long userId = user.getId();
@@ -82,7 +83,7 @@ public class ProfileController {
 
     @GetMapping("/status")
     public ResponseEntity<RestResponse<Boolean>> checkProfileStatus() {
-        String email = CustomUserDetailsService.getAuthentication().getName();
+        String email = getAuthentication().getName();
         User user = userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
         Long userId = user.getId();
