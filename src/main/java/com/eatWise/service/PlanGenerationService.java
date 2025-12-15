@@ -4,6 +4,7 @@ import static com.eatWise.config.CustomUserDetailsService.getAuthentication;
 
 import com.eatWise.client.RagClient;
 import com.eatWise.client.model.request.RagRequest;
+import com.eatWise.client.model.request.RagWrapper;
 import com.eatWise.client.model.response.RagResponse;
 import com.eatWise.domain.Plan;
 import com.eatWise.domain.Profile;
@@ -15,8 +16,10 @@ import com.eatWise.repository.ProfileRepository;
 import com.eatWise.repository.UserRepository;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class PlanGenerationService {
@@ -34,10 +37,17 @@ public class PlanGenerationService {
         Optional<Profile> profile = profileRepository.findByUserId(user.get().getId());
 
         RagRequest ragRequest = generatedPlanMapper.toRagRequest(profile.get(), daysRequest);
-        RagResponse ragResponse = ragClient.generatePlan(ragRequest);
+        String fullName = user.get().getFirstName() + " " + user.get().getLastName();
+        RagWrapper reg = RagWrapper.builder()
+                .fullName(fullName)
+                .profile(ragRequest)
+                .build();
+
+        RagResponse ragResponse = ragClient.generatePlan(reg);
+
+        log.info("Log: " +  ragResponse);
 
         Plan plan = generatedPlanMapper.toPlan(ragResponse);
-//        user.get().getPlans().add(plan);
 
         plan.setUser(user.get());
         planRepository.save(plan);
