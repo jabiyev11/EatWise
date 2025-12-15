@@ -90,19 +90,18 @@ public class ProfileMapper {
 
         // Apply activity level multiplier
         double activityMultiplier = switch (profile.getActivityLevel()) {
-            case LIGHTLY_ACTIVE -> 1.375;
-            case MODERATELY_ACTIVE -> 1.55;
-            case VERY_ACTIVE -> 1.725;
-            case EXTRA_ACTIVE -> 1.9;
+            case SEDENTARY -> 1.2;
+            case LIGHT -> 1.375;
+            case MODERATE -> 1.55;
+            case ACTIVE -> 1.725;
         };
 
         double tdee = bmr * activityMultiplier;
 
         // Adjust based on goal
         double targetCalories = switch (profile.getGoal()) {
-            case LOSE_WEIGHT -> tdee - 500;  // 500 calorie deficit
-            case MAINTAIN_WEIGHT -> tdee;
-            case GAIN_WEIGHT -> tdee + 300;  // 300 calorie surplus
+            case FAT_LOSS -> tdee - 500;  // 500 calorie deficit
+            case MAINTENANCE -> tdee;
             case MUSCLE_GAIN -> tdee + 400;  // 400 calorie surplus
         };
 

@@ -71,20 +71,19 @@ public class Profile {
 
     // Enums
     public enum Gender {
-        MALE, FEMALE, OTHER
+        MALE, FEMALE
     }
 
     public enum ActivityLevel {
-        LIGHTLY_ACTIVE,
-        MODERATELY_ACTIVE,
-        VERY_ACTIVE,
-        EXTRA_ACTIVE
+        SEDENTARY,
+        LIGHT,
+        MODERATE,
+        ACTIVE
     }
 
     public enum Goal {
-        LOSE_WEIGHT,
-        MAINTAIN_WEIGHT,
-        GAIN_WEIGHT,
+        FAT_LOSS,
+        MAINTENANCE,
         MUSCLE_GAIN
     }
 
