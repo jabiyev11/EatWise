@@ -34,6 +34,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     }
 
     public static Authentication getAuthentication() {
+        System.out.println("Salam");
         return SecurityContextHolder.getContext().getAuthentication();
     }
 }
